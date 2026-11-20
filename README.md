@@ -34,7 +34,8 @@
   <a href="docs/es/README.md">Español</a> |
   <a href="docs/uk-UA/README.md">Українська</a> |
   <a href="docs/pl/README.md">Polski</a> |
-  <a href="docs/bn/README.md">বাংলা</a>
+  <a href="docs/bn/README.md">বাংলা</a> |
+  <a href="docs/it-IT/README.md">Italiano</a>
 </p>
 
 <p align="center">
@@ -141,13 +142,13 @@ Instead of rebuilding that process in every prompt, you install it once and make
 
 ECC is MIT-licensed open source. It works best with Claude Code today, has native Codex and Qoder plugin paths, and provides capability-limited adapters for Cursor, OpenCode, Gemini, Zed, GitHub Copilot, Antigravity, Qwen, and other harnesses. See the [support status matrix](#platform-support) before assuming feature parity.
 
-Access to 71 agents, 311 skills, and 97 legacy command shims, plus hooks, rules, memory, continuous learning, and AgentShield security scanning. The agents are specialized for planning, review, build repair, security, architecture, and domain work.
+Access to 72 agents, 328 skills, and 99 legacy command shims, plus hooks, rules, memory, continuous learning, and AgentShield security scanning. The agents are specialized for planning, review, build repair, security, architecture, and domain work.
 
 | Included         |       Count | What it gives you                                                                    |
 | ---------------- | ----------: | ------------------------------------------------------------------------------------ |
-| Agents           |   71 agents | Planning, review, build repair, security, architecture, and domain work              |
-| Skills           |  311 skills | TDD, research, security, docs, frontend, data, ML, operations, and more              |
-| Commands         | 97 commands | Convenient entry points while ECC moves to a skills-first surface                    |
+| Agents           |   72 agents | Planning, review, build repair, security, architecture, and domain work              |
+| Skills           |  328 skills | TDD, research, security, docs, frontend, data, ML, operations, and more              |
+| Commands         | 99 commands | Convenient entry points while ECC moves to a skills-first surface                    |
 | Hooks and memory |     Runtime | Enforcement, session summaries, continuous learning, instincts, and context controls |
 | Rules            |   Selective | Always-loaded standards you choose by language or project                            |
 | AgentShield      |    Included | Scanning for prompts, hooks, MCP config, permissions, secrets, and agent files       |
@@ -262,7 +263,7 @@ npx ecc-universal@2.2.3 doctor --target kimi
 
 Do not use `npx ecc-install --profile minimal --target claude`: `ecc-install` is a binary name inside `ecc-universal`, not a separately published npm package.
 
-ECC also ships advanced managed adapters for `cursor`, `antigravity`, `gemini`, `opencode`, `codebuddy`, `joycode`, `qwen`, `zed`, `hermes`, and `openclaw`. Those targets still use their documented `ecc install --target ...` paths until each adapter has passed the guided collision, update, repair, and uninstall lifecycle matrix. Neither wizard silently installs into every detected harness.
+ECC also ships advanced managed adapters for `cursor`, `antigravity`, `antigravity-home`, `gemini`, `opencode`, `codebuddy`, `joycode`, `qwen`, `zed`, `hermes`, `openclaw`, and `mistral-vibe`. Those targets still use their documented `ecc install --target ...` paths until each adapter has passed the guided collision, update, repair, and uninstall lifecycle matrix. Neither wizard silently installs into every detected harness.
 
 ### Pick one path only (per harness)
 
@@ -412,7 +413,7 @@ the [.qoder-plugin notes](.qoder-plugin/README.md) for the exact boundary.
 ### Other agents and editors
 
 <details>
-<summary><strong>Cursor, OpenCode, Gemini, Zed, Antigravity, Qwen, Hermes, OpenClaw, Kimi, CodeBuddy, JoyCode, Copilot</strong></summary>
+<summary><strong>Cursor, OpenCode, Gemini, Zed, Antigravity, Qwen, Hermes, OpenClaw, Kimi, Mistral Vibe, CodeBuddy, JoyCode, Copilot</strong></summary>
 
 Clone ECC once, then choose the target that matches your harness:
 
@@ -427,11 +428,13 @@ cd ECC
 | OpenCode | `npm install && npm run build:opencode && ./install.sh --profile full --target opencode --enable-hooks` | Builds the plugin payload before the full install |
 | Gemini CLI | `./install.sh --profile minimal --target gemini` | Project-local `.gemini/` config |
 | Zed | `./install.sh --profile minimal --target zed` | Project-local `.zed/` adapter |
-| Antigravity | `./install.sh --profile minimal --target antigravity` | See the [Antigravity guide](docs/ANTIGRAVITY-GUIDE.md) |
+| Antigravity (Global Plugin) | `./install.sh --target antigravity-home --profile core --enable-hooks` | Experimental global plugin (`~/.gemini/config/plugins/ecc/`) with lifecycle hooks · [Guide](docs/ANTIGRAVITY-GUIDE.md) |
+| Antigravity (Project-Local) | `./install.sh --target antigravity --profile minimal` | Project-local `.agents/` adapter · [Guide](docs/ANTIGRAVITY-GUIDE.md) |
 | Qwen CLI | `./install.sh --profile minimal --target qwen` | See the [Qwen guide](docs/QWEN-GUIDE.md) |
 | Hermes | `./install.sh --profile minimal --target hermes` | See the [Hermes setup guide](docs/HERMES-SETUP.md) |
 | OpenClaw | `./install.sh --profile minimal --target openclaw` | Managed home-directory install |
 | Kimi Code CLI | `./install.sh --profile minimal --target kimi` | Project-local `.kimi-code/` install · [Get Kimi Code](https://www.kimi.ai/code?aff=ecc) |
+| Mistral Vibe | `./install.sh --target mistral-vibe --skills tdd-workflow` | Project-local `.vibe/skills/` install · [Mistral Vibe guide](docs/MISTRAL-VIBE-GUIDE.md) |
 | CodeBuddy | `./install.sh --profile minimal --target codebuddy` | Project-local `.codebuddy/` install |
 | JoyCode | `./install.sh --profile minimal --target joycode` | Project-local `.joycode/` install |
 | GitHub Copilot | `./install.sh --profile full --target copilot` | Installs skills to `.github/skills/` and agents to `.github/agents/` for Copilot CLI |
@@ -693,6 +696,7 @@ Start with the workflow you need, not the full catalog.
 | Building a feature | `/ecc:plan "describe the feature"`, then `tdd-workflow` |
 | Fixing a bug | Reproduce it with a failing test, then use `tdd-workflow` |
 | Reviewing new code | `/code-review` for a fresh-context review |
+| Triaging a GitHub issue | `/ecc:issue-review <number>` (plugin) or `/issue-review <number>` (manual install) to verify it against the code and draft a reply |
 | Repairing a build | `/build-fix` |
 | Cleaning a codebase | `/refactor-clean` |
 | Checking context pressure | `/context-budget` |
@@ -733,6 +737,7 @@ Skills are the canonical workflow surface; maintained slash entries stay availab
 | Design system architecture | `/ecc:plan` + architect agent | architect |
 | Write code with tests first | `tdd-workflow` skill | tdd-guide |
 | Review code I just wrote | `/code-review` | code-reviewer |
+| Review a GitHub issue | `/ecc:issue-review` (plugin), `/issue-review` (manual install) | — (issue-review skill) |
 | Fix a failing build | `/build-fix` | build-error-resolver |
 | Run end-to-end tests | `e2e-testing` skill | e2e-runner |
 | Find security vulnerabilities | `/security-scan` | security-reviewer |
@@ -858,9 +863,9 @@ Stable graduation of the 2.0 line: control-pane substrate, worktree lifecycle se
 
 ```text
 ECC/
-|-- agents/           # 71 specialized subagents for delegation
-|-- skills/           # 311 reusable workflows loaded on demand
-|-- commands/         # 97 maintained slash-command shims
+|-- agents/           # 72 specialized subagents for delegation
+|-- skills/           # 328 reusable workflows loaded on demand
+|-- commands/         # 99 maintained slash-command shims
 |-- rules/            # opt-in common and language standards
 |-- hooks/            # runtime automation and enforcement
 |-- scripts/          # install, repair, sync, orchestration, and checks
@@ -882,7 +887,7 @@ ECC/
 |   |-- plugin.json         # Plugin metadata and component paths
 |   |-- marketplace.json    # Marketplace catalog for /plugin marketplace add
 |
-|-- agents/           # 71 specialized subagents for delegation
+|-- agents/           # 72 specialized subagents for delegation
 |   |-- planner.md           # Feature implementation planning
 |   |-- architect.md         # System design decisions
 |   |-- tdd-guide.md         # Test-driven development
@@ -955,12 +960,14 @@ ECC/
 |   |-- quarkus-tdd/                # Quarkus TDD
 |   |-- quarkus-verification/       # Quarkus verification
 |   |-- rails-patterns/             # Rails architecture patterns
+|   |-- rails-security/             # Rails security practices
 |   |-- springboot-patterns/        # Java Spring Boot patterns
 |   |-- springboot-security/        # Spring Boot security
 |   |-- springboot-tdd/             # Spring Boot TDD
 |   |-- springboot-verification/    # Spring Boot verification
 |   |-- configure-ecc/              # Interactive installation wizard
 |   |-- security-scan/              # AgentShield security auditor integration
+|   |-- issue-review/               # GitHub issue review: verify, dedupe, severity, draft reply
 |   |-- java-coding-standards/      # Java coding standards
 |   |-- jpa-patterns/               # JPA/Hibernate patterns
 |   |-- postgres-patterns/          # PostgreSQL optimization patterns
@@ -992,6 +999,7 @@ ECC/
 |-- commands/         # Maintained slash-entry compatibility; prefer skills/
 |   |-- plan.md             # /plan - Implementation planning
 |   |-- code-review.md      # /code-review - Quality review
+|   |-- issue-review.md     # /issue-review - GitHub issue review
 |   |-- build-fix.md        # /build-fix - Fix build errors
 |   |-- refactor-clean.md   # /refactor-clean - Dead code removal
 |   |-- quality-gate.md     # /quality-gate - Verification gate
@@ -1059,6 +1067,7 @@ ECC/
 |   |   |-- session-end.js       # Save state on session end
 |   |   |-- pre-compact.js       # Pre-compaction state saving
 |   |   |-- suggest-compact.js   # Strategic compaction suggestions
+|   |   |-- context-gate.js      # Opt-in checkpoint-and-restart gate at 90% context (ECC_CONTEXT_GATE_MODE=enforce; advisory by default)
 |   |   |-- evaluate-session.js  # Extract patterns from sessions
 |   |-- setup-package-manager.js # Interactive PM setup
 |
@@ -1324,12 +1333,22 @@ Treat `stable`, `beta`, `experimental`, and `instruction-only` below as capabili
 |---|---|---|---|
 | Claude Code | Stable primary | Plugin or selective installer | The plugin advertises the installed catalog to the model; use a selective/manual profile when context footprint matters. Optional shell-backed skills are not portable to every OS. |
 | Codex | Supported native plugin | Codex marketplace plugin or repo config | Native hooks require an explicit trust decision and do not use Claude's hook profiles. The legacy sync is compatibility-only. |
+| Antigravity | Experimental native plugin adapter | Antigravity 2.0/IDE plugin (`~/.gemini/config/plugins/ecc`) or project `.agents/` | Profile-gated lifecycle hooks, rules, workflows, skills, and memory MCP. CLI 1.3.5 validates local import; authenticated native tool and Stop execution remain unverified. |
 | Qoder | Supported native plugin | Local plugin directory in Qoder CLI or ZIP upload in Qoder IDE | Loads the canonical skills, agents, commands, and MCP config; only the reviewed SessionStart hook is enabled, and Node.js 18+ must be on the non-interactive PATH. |
 | Cursor | Beta project adapter | Selective installer into `.cursor/` | Agent discovery varies by Cursor build; hook events use profile-gated dispatchers, but full Claude feature parity is not claimed. |
 | OpenCode | Beta built plugin | Build plugin, then selective installer | ECC ships a subset of the catalog; connect a provider and select a model in OpenCode ([#2617](https://github.com/affaan-m/ECC/issues/2617)). |
 | GitHub Copilot Chat | Instruction-only | Checked-in instructions and prompt files | ECC hooks are not adapted. |
-| GitHub Copilot CLI | Beta project adapter | `--target copilot` places skills and adapted agents in `.github/` | ECC hooks, rules, and command shims are not installed by this target. |
-| Gemini, Zed, Antigravity, Qwen, Hermes, OpenClaw, Kimi, CodeBuddy, JoyCode | Experimental/minimal adapters | Harness-specific selective target | File placement and instruction portability are tested; full Claude feature parity is not claimed. |
+| GitHub Copilot CLI | Beta project adapter | `--target copilot` places skills, adapted agents, and converted rules in `.github/` | ECC hooks and command shims are not installed by this target. |
+| Gemini, Zed, Qwen, Hermes, OpenClaw, Kimi, Mistral Vibe, CodeBuddy, JoyCode | Experimental/minimal adapters | Harness-specific selective target | File placement and instruction portability are tested; full Claude feature parity is not claimed. |
+
+The additional Antigravity CLI bridge and plugin metadata are experimental. Its manifest-command and
+agent-transform fixtures pass locally; native loader and lifecycle acceptance remain pending. Enabled
+bridge calls require complete JSON and an explicit `workspacePaths` context containing the hook working
+directory; unbound, incomplete, or invalid safety calls deny instead of guessing. The bootstrap reads at
+most 1 MiB and accepts up to 32 absolute workspace roots. Existing project/global installers retain their
+owned hook and MCP configuration. CLI-specific agent tool names
+require explicit `ANTIGRAVITY_RUNTIME=cli`; the default project tool mapping remains unchanged. Unsupported
+editor search, fetch, and subagent capabilities are omitted instead of mapped to broader tools.
 
 <details>
 <summary><strong>Package manager detection</strong></summary>
@@ -1341,7 +1360,7 @@ The plugin automatically detects your preferred package manager (npm, pnpm, yarn
 3. **package.json**: `packageManager` field
 4. **Lock file**: Detection from package-lock.json, yarn.lock, pnpm-lock.yaml, or bun.lockb
 5. **Global config**: `~/.claude/package-manager.json`
-6. **Fallback**: First available package manager
+6. **Fallback**: npm
 
 To set your preferred package manager:
 
@@ -1801,8 +1820,10 @@ inventory to see what this checkout installs; a count is not a capability grant.
 Claude-only agent frontmatter (`model`, `tools`, `color`) is dropped during the
 copy: Copilot resolves the model from your own configuration, and it governs
 tool access per session through `--allow-tool`/`--deny-tool` rather than through
-agent frontmatter. ECC's rules, commands, and hooks are not installed by this
-target.
+agent frontmatter. Rules are installed under `.github/instructions/ecc/` as
+`.instructions.md` files, with the Claude-style `paths:` frontmatter converted
+to Copilot's `applyTo:` glob list (rules without `paths` become `applyTo:
+"**"`). ECC's commands and hooks are not installed by this target.
 
 #### Feature coverage
 
@@ -1818,6 +1839,7 @@ target.
 | Commit message format | Per-task instruction in `settings.json` |
 | Skills | Native discovery in Copilot CLI (`.github/skills/`, `.agents/skills/`) |
 | Agents / delegation | Copilot CLI custom agents (`.github/agents/`, `--agent`) |
+| Rules | Path-specific instructions (`.github/instructions/ecc/`, `applyTo:` globs) |
 | Hooks / automation | ECC's hooks are not ported (Copilot CLI has its own plugin hook system) |
 
 #### Limitations
@@ -2114,6 +2136,10 @@ node scripts/codex/check-plugin-cache.js
 ```
 
 If it reports unresolved parent references, refresh the native cache with `codex plugin marketplace upgrade ecc`, run `codex plugin add ecc@ecc` again, and restart Codex. Registration in `codex plugin list` confirms the marketplace entry, while the cache check verifies that the installed manifest can resolve its skills, MCP configuration, and assets. Use `bash scripts/sync-ecc-to-codex.sh` only when you intentionally need the legacy copied-configuration compatibility path.
+
+If Codex 0.164.0 reports `unsupported plugin entry type` after you install hook
+dependencies into the cache, see the [cache-local runtime dependency procedure](.codex-plugin/README.md#runtime-dependencies-and-codex-01640-cache-checks).
+It avoids npm executable symlinks without disabling Codex's hook trust checks.
 </details>
 
 More answers: [TROUBLESHOOTING.md](TROUBLESHOOTING.md) covers memory, hooks, installation, performance, and common error messages. [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) tracks workarounds for open Claude Code bugs.

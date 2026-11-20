@@ -14,6 +14,7 @@ User request → Claude picks a tool → PreToolUse hook runs → Tool executes 
 - **Stop** hooks run after each Claude response.
 - **SessionStart/SessionEnd** hooks run at session lifecycle boundaries.
 - **PreCompact** hooks run before context compaction, useful for saving state.
+- **UserPromptSubmit** hooks run when the user submits a prompt, before Claude sees it. Their JSON output can inject `additionalContext` for the turn (used by `user-prompt:context-gate` to run an end-of-session checkpoint protocol at high context usage). **Enforcement is opt-in**: by default the gate runs in `advisory` mode — completely inert, doing no per-prompt work and suppressing nothing. Setting `ECC_CONTEXT_GATE_MODE=enforce` turns on the protocol: at or above the gate threshold it orders a clean stopping point and a session-scoped checkpoint (written under the handoff dir, never the project root), and the advisory hooks defer — `suggest-compact` and `ecc-context-monitor` suppress their `/compact` suggestions and context warnings (via `scripts/lib/context-gate-state.js`) so the gate owns end-of-session messaging without contradiction. When the gate cannot evaluate usage (missing/unreadable transcript), or is left in advisory mode, those hooks keep their own warnings.
 
 ## Hooks in This Plugin
 
@@ -130,6 +131,12 @@ export ECC_DISABLED_HOOKS="pre:bash:tmux-reminder,post:edit:typecheck"
 # These switches reduce only the named protection while enabled; they do not
 # bypass the Bash dispatcher or config-protection checks.
 export ECC_HOOK_INPUT_MAX_BYTES=524288
+
+# Stop waiting for hook input after this many idle milliseconds when the
+# caller never closes stdin (default: 3000; 0 disables the deadline).
+# Input that is not yet a complete JSON object is treated as incomplete, so
+# fail-closed safety hooks block instead of hanging until the harness kills them.
+export ECC_HOOK_INPUT_IDLE_TIMEOUT_MS=1500
 
 # Disable only GateGuard during setup or recovery
 export ECC_GATEGUARD=off
